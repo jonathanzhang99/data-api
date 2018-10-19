@@ -19,6 +19,7 @@ if UNI is None or PASSWORD is None:
     PASSWORD = str(config["login"]["password"])
 
 
+
 class JSON(scrapy.Item):
     title = scrapy.Field()
     file_urls = scrapy.Field()
