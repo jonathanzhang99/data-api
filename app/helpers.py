@@ -10,7 +10,15 @@ from .models import Course
 ITEM_PIPELINES = {'scrapy.pipelines.files.FilesPipeline': 1}
 FILES_STORE = './data'
 COURSES_URL = "http://opendataservice.columbia.edu/api/9/json/download"
-config = json.load(open("./app/config.json"))
+
+UNI = str(os.environ.get('UNI'))
+PASSWORD = str(os.environ.get('UNI_PASSWORD'))
+if UNI is None or PASSWORD is None:
+    config = json.load(open("./app/config.json"))
+    UNI = str(config["login"]["uni"])
+    PASSWORD = str(config["login"]["password"])
+
+
 
 class JSON(scrapy.Item):
     title = scrapy.Field()
@@ -31,13 +39,11 @@ class CourseSpider(scrapy.Spider):
     }
 
     def parse(self, response):
-        uni = str(config["login"]["uni"])
-        password = str(config["login"]["password"])
-        if uni is None or password is None:
+        if UNI is None or PASSWORD is None:
             raise Exception('you must give a uni and password')
         return [scrapy.FormRequest.from_response
                 (response,
-                 formdata={'username': uni, 'password': password},
+                 formdata={'username': UNI, 'password': PASSWORD},
                  formxpath='//form[@id="fm1"]',
                  callback=self.after_login,
                  dont_filter=True)]
