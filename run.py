@@ -1,15 +1,12 @@
 from app import create_app, db, mail
 from app.models import Course, Dining, Student, User
-from app.helpers import get_courses
-
+# from app.helpers import get_courses
 import os
-
 
 app = create_app()
 
-print("creating database...")
-with app.app_context():
-    get_courses()
+# with app.app_context():
+#    get_courses()
 
 
 @app.shell_context_processor
@@ -25,12 +22,6 @@ def make_shell_context():
 
 
 @app.cli.command()
-def courses():
-    with app.app_context():
-        get_courses()
-
-
-@app.cli.command()
 def test():
     """Run unit tests from command line"""
     from unittest import TestLoader, TextTestRunner
@@ -40,6 +31,3 @@ def test():
 
 def clear():
     os.system('clear')
-
-
-
